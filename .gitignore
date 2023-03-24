@@ -1,0 +1,3 @@
+./settings/*
+./Debug/*
+STM32F103RBTX_FLASH.ld
