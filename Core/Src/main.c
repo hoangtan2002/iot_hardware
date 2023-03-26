@@ -24,6 +24,7 @@
 #include"timer.h"
 #include"uart.h"
 #include"scheduler.h"
+#include"sensor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,9 +126,10 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &buffer_byte, 1);
   HAL_TIM_Base_Start_IT(&htim2);
   //Add task to scheduler
-  SCH_Add_Task(ledToggle, 50, 50);
+  SCH_Add_Task(ledToggle, 0, 100);
   SCH_Add_Task(fsmWrapper, 0, 1);
-  SCH_Add_Task(uart_communiation_fsm, 0, 300);
+  SCH_Add_Task(uart_communiation_fsm, 0, 200);
+  SCH_Add_Task(pullSensor,0,53);
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

@@ -49,6 +49,7 @@ extern uint8_t cmd_buffer[MAX_BUFFER_SIZE];
 extern uint8_t cmd_flag;
 extern uint32_t toSend;
 
+void sendMCUStatus();
 void resetCmdBuf();
 void resetBuf();
 void command_parser_fsm();

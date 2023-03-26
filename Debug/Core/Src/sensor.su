@@ -1,0 +1,3 @@
+../Core/Src/sensor.c:13:7:getTemp	4	static
+../Core/Src/sensor.c:16:7:getHumid	4	static
+../Core/Src/sensor.c:20:6:pullSensor	8	static
