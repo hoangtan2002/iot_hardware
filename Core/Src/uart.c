@@ -22,13 +22,28 @@ uint8_t index_buffer = 0;
 uint8_t buffer_flag = 0;
 uint8_t buffer_byte;
 uint8_t str[MAX_BUFFER_SIZE];
+uint8_t tempStr[MAX_BUFFER_SIZE];
 uint8_t cmd_buffer[MAX_BUFFER_SIZE];
 uint8_t cmd_index = 0;
 uint8_t cmd_flag = INIT_UART;
 uint8_t action_flag = STOP_SEND;
 
+uint32_t checksumResult = 0;
 int idx = 0;
 int whatToSend = SEND_TEMP;
+
+uint32_t checksumCalc(uint8_t* str, uint32_t n){
+	uint32_t result = 0;
+	for(uint8_t i=0; i<n; i++){
+		result += str[i];
+	}
+	return result;
+}
+void resetStr(){
+	for(int i=0; i<MAX_BUFFER_SIZE; i++){
+		str[i] = 0;
+	}
+}
 
 void resetCmdBuf(){
 	for(int i=0; i<MAX_BUFFER_SIZE; i++){
@@ -80,13 +95,21 @@ void command_parser_fsm(){
 	}
 }
 
+
 void sendMCUInfo(){
-	HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!VER:%s:%s#\n", MCU_VER, FIRMWARE_VER), 100);
+	checksumResult = checksumCalc(&(tempStr[0]), sprintf( &(tempStr[0]), "VER:%s:%s", MCU_VER, FIRMWARE_VER));
+	HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+	checksumResult = 0;
 }
 
 void uart_communiation_fsm(){
 	if(action_flag==SEND){
-		HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!OK:%.2f:%.2f#\n", getTemp(), getHumid()), 100);
+		//resetStr();
+		checksumResult = checksumCalc(&(tempStr[0]),
+									  sprintf( &(tempStr[0]), "OK:%.2f:%.2f", getTemp(), getHumid()));
+		HAL_UART_Transmit(&huart1,
+						  &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+		checksumResult = 0;
 	}
 	else if(action_flag==STOP_SEND){
 		return;

@@ -50,6 +50,8 @@ extern uint8_t cmd_buffer[MAX_BUFFER_SIZE];
 extern uint8_t cmd_flag;
 extern uint32_t toSend;
 
+uint32_t checksumCalc(uint8_t* str, uint32_t n);
+
 void sendMCUStatus();
 void resetCmdBuf();
 void resetBuf();

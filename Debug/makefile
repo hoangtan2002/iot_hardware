@@ -60,8 +60,8 @@ all: main-build
 main-build: iot.elf secondary-outputs
 
 # Tool invocations
-iot.elf iot.map: $(OBJS) $(USER_OBJS) /home/tan/STM32CubeIDE/workspace_1.11.0/iot/STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "iot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/tan/STM32CubeIDE/workspace_1.11.0/iot/STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="iot.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+iot.elf iot.map: $(OBJS) $(USER_OBJS) /home/tan/STM32CubeIDE/workspace_1.11.2/iot/STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "iot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/tan/STM32CubeIDE/workspace_1.11.2/iot/STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="iot.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
