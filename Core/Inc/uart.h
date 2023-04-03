@@ -11,10 +11,11 @@
 #include "main.h"
 #include"timer.h"
 #include<stdio.h>
+#include"version.h"
 
 extern UART_HandleTypeDef huart1;
 
-#define MAX_BUFFER_SIZE 10
+#define MAX_BUFFER_SIZE 30
 
 #define CMD_READY 5
 #define	CMD_WAIT 6

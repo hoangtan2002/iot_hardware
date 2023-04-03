@@ -67,13 +67,12 @@ void command_parser_fsm(){
 				cmd_flag = INIT_UART;
 				if (cmd_buffer[0] == 'R') action_flag = SEND;
 				else if (cmd_buffer[0] == 'O') action_flag = STOP_SEND;
+				else if (cmd_buffer[0] == 'V') sendMCUInfo();
 				index_buffer = 0;
 				cmd_index = 0;
 				idx = 0;
-				whatToSend=SEND_TEMP;
 				resetBuf();
 				resetCmdBuf();
-				uart_communiation_fsm();
 			}
 			break;
 		default:
@@ -81,16 +80,13 @@ void command_parser_fsm(){
 	}
 }
 
+void sendMCUInfo(){
+	HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!VER:%s:%s#\n", MCU_VER, FIRMWARE_VER), 100);
+}
+
 void uart_communiation_fsm(){
 	if(action_flag==SEND){
-		if(whatToSend == SEND_TEMP){
-			HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!1:T:%.2f#\n", getTemp()), 100);
-			whatToSend = (whatToSend + 1)%2;
-		}
-		else{
-			HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!1:H:%.2f#\n", getHumid()), 100);
-			whatToSend = (whatToSend + 1)%2;
-		}
+		HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!OK:%.2f:%.2f#\n", getTemp(), getHumid()), 100);
 	}
 	else if(action_flag==STOP_SEND){
 		return;

@@ -7,6 +7,7 @@
 
 #ifndef INC_SENSOR_H_
 #define INC_SENSOR_H_
+#include "main.h"
 
 float getTemp();
 float getHumid();

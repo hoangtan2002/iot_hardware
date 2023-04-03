@@ -7,6 +7,8 @@
 
 #include "sensor.h"
 
+uint32_t adcVal;
+
 float temp = 20.5;
 float humid = 50.5;
 
@@ -18,8 +20,8 @@ float getHumid(){
 }
 
 void pullSensor(){
-	temp += 1.1;
-	if(temp > 33){
+	temp += 0.5;
+	if(temp > 32){
 		temp = 20.5;
 	}
 	humid += 20.1;

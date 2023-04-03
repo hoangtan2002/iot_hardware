@@ -22,6 +22,7 @@
 #define ONE_SHOT_TASK 0
 
 void SCH_Init(void);
+
 uint32_t SCH_Add_Task ( void (*pFunction)() ,
 					uint32_t DELAY,
 					uint32_t PERIOD);

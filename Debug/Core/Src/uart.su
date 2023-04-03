@@ -1,4 +1,5 @@
 ../Core/Src/uart.c:33:6:resetCmdBuf	16	static
 ../Core/Src/uart.c:39:6:resetBuf	16	static
 ../Core/Src/uart.c:45:6:command_parser_fsm	8	static
-../Core/Src/uart.c:84:6:uart_communiation_fsm	8	static
+../Core/Src/uart.c:83:6:sendMCUInfo	8	static
+../Core/Src/uart.c:87:6:uart_communiation_fsm	24	static
