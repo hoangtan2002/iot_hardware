@@ -44,14 +44,16 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
-I2C_HandleTypeDef hi2c1;
-TIM_HandleTypeDef htim2;
-UART_HandleTypeDef huart2;
 ADC_HandleTypeDef hadc1;
 
-/* USER CODE BEGIN PV */
 I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c2;
+
+TIM_HandleTypeDef htim2;
+
+UART_HandleTypeDef huart2;
+
+/* USER CODE BEGIN PV */
 TIM_HandleTypeDef htim2;
 
 /* USER CODE END PV */
@@ -64,6 +66,7 @@ static void MX_TIM2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -130,14 +133,18 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &buffer_byte, 1);
   HAL_TIM_Base_Start_IT(&htim2);
-  //Add task to scheduler
+  initReading();
+  /*Add task to scheduler*/
+  scanAddr();
   SCH_Add_Task(ledToggle, 0, 100);
   SCH_Add_Task(fsmWrapper, 0, 1);
   SCH_Add_Task(uart_communiation_fsm, 0, 200);
-  SCH_Add_Task(pullSensor,0,53);
+  SCH_Add_Task(pullSensor,0,100);
+//SCH_Add_Task(sensorCheck(),0,10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -273,6 +280,40 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
 
 }
 

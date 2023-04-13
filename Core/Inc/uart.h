@@ -40,7 +40,6 @@ extern UART_HandleTypeDef huart1;
 #define SEND 3
 #define STOP_SEND 4
 
-extern uint8_t temp;
 extern uint8_t buffer[MAX_BUFFER_SIZE];
 extern uint8_t index_buffer;
 extern uint8_t buffer_flag;
@@ -49,6 +48,8 @@ extern uint8_t action_flag;
 extern uint8_t cmd_buffer[MAX_BUFFER_SIZE];
 extern uint8_t cmd_flag;
 extern uint32_t toSend;
+
+extern UART_HandleTypeDef huart1;
 
 uint32_t checksumCalc(uint8_t* str, uint32_t n);
 

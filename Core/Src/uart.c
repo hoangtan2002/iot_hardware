@@ -39,6 +39,7 @@ uint32_t checksumCalc(uint8_t* str, uint32_t n){
 	}
 	return result;
 }
+
 void resetStr(){
 	for(int i=0; i<MAX_BUFFER_SIZE; i++){
 		str[i] = 0;
@@ -54,6 +55,25 @@ void resetCmdBuf(){
 void resetBuf(){
 	for(int i=0; i<MAX_BUFFER_SIZE; i++){
 		buffer[i] = 0;
+	}
+}
+
+void sendMCUInfo(){
+	checksumResult = checksumCalc(&(tempStr[0]),
+								  sprintf( &(tempStr[0]), "VER:%s:%s", MCU_VER, FIRMWARE_VER));
+	HAL_UART_Transmit(&huart1, &(str[0]),
+					  sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+	checksumResult = 0;
+}
+
+void sendSensorInfo(){
+	char status[8];
+	if(getSensorStatus()){
+		sprintf(&(status[0]), "!OK#");
+		HAL_UART_Transmit(&huart1, &(status[0]), 8, 100);
+	} else{
+		sprintf(&(status[0]), "!ERROR#");
+		HAL_UART_Transmit(&huart1, &(status[0]), 8, 100);
 	}
 }
 
@@ -83,6 +103,7 @@ void command_parser_fsm(){
 				if (cmd_buffer[0] == 'R') action_flag = SEND;
 				else if (cmd_buffer[0] == 'O') action_flag = STOP_SEND;
 				else if (cmd_buffer[0] == 'V') sendMCUInfo();
+				else if (cmd_buffer[0] == 'S') sendSensorInfo();
 				index_buffer = 0;
 				cmd_index = 0;
 				idx = 0;
@@ -95,16 +116,17 @@ void command_parser_fsm(){
 	}
 }
 
-
-void sendMCUInfo(){
-	checksumResult = checksumCalc(&(tempStr[0]), sprintf( &(tempStr[0]), "VER:%s:%s", MCU_VER, FIRMWARE_VER));
-	HAL_UART_Transmit(&huart1, &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
-	checksumResult = 0;
-}
-
 void uart_communiation_fsm(){
 	if(action_flag==SEND){
 		//resetStr();
+		if(getSensorStatus()==0){
+			checksumResult = checksumCalc(&(tempStr[0]),
+										  sprintf( &(tempStr[0]), "ERR:%.2f:%.2f", 0.0, 0.0));
+			HAL_UART_Transmit(&huart1,
+							  &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+			checksumResult = 0;
+			return;
+		}
 		checksumResult = checksumCalc(&(tempStr[0]),
 									  sprintf( &(tempStr[0]), "OK:%.2f:%.2f", getTemp(), getHumid()));
 		HAL_UART_Transmit(&huart1,

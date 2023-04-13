@@ -1,7 +1,8 @@
 ../Core/Src/uart.c:35:10:checksumCalc	24	static
-../Core/Src/uart.c:42:6:resetStr	16	static
-../Core/Src/uart.c:48:6:resetCmdBuf	16	static
-../Core/Src/uart.c:54:6:resetBuf	16	static
-../Core/Src/uart.c:60:6:command_parser_fsm	8	static
-../Core/Src/uart.c:99:6:sendMCUInfo	8	static
-../Core/Src/uart.c:105:6:uart_communiation_fsm	24	static
+../Core/Src/uart.c:43:6:resetStr	16	static
+../Core/Src/uart.c:49:6:resetCmdBuf	16	static
+../Core/Src/uart.c:55:6:resetBuf	16	static
+../Core/Src/uart.c:61:6:sendMCUInfo	8	static
+../Core/Src/uart.c:69:6:sendSensorInfo	16	static
+../Core/Src/uart.c:80:6:command_parser_fsm	8	static
+../Core/Src/uart.c:119:6:uart_communiation_fsm	24	static

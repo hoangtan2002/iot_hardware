@@ -1,3 +1,11 @@
-../Core/Src/sensor.c:15:7:getTemp	4	static
-../Core/Src/sensor.c:18:7:getHumid	4	static
-../Core/Src/sensor.c:22:6:pullSensor	8	static
+../Core/Src/sensor.c:20:7:getTemp	4	static
+../Core/Src/sensor.c:23:7:getHumid	4	static
+../Core/Src/sensor.c:27:5:getSensorStatus	4	static
+../Core/Src/sensor.c:31:6:dht20Init	24	static
+../Core/Src/sensor.c:48:6:dht20Reset	32	static
+../Core/Src/sensor.c:67:6:sensorCheck	16	static
+../Core/Src/sensor.c:76:6:dht20Start	24	static
+../Core/Src/sensor.c:94:6:dht20Read	40	static
+../Core/Src/sensor.c:119:6:pullSensor	8	static
+../Core/Src/sensor.c:123:6:initReading	8	static
+../Core/Src/sensor.c:127:6:scanAddr	112	static
