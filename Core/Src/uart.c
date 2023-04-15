@@ -7,6 +7,7 @@
 
 #include"uart.h"
 #include"sensor.h"
+#include"led.h"
 
 #define START_CHR '!'
 #define END_CHR '#'
@@ -60,9 +61,12 @@ void resetBuf(){
 
 void sendMCUInfo(){
 	checksumResult = checksumCalc(&(tempStr[0]),
-								  sprintf( &(tempStr[0]), "VER:%s:%s", MCU_VER, FIRMWARE_VER));
+								  sprintf( &(tempStr[0]),
+										  "VER:%s:%s", MCU_VER, FIRMWARE_VER));
 	HAL_UART_Transmit(&huart1, &(str[0]),
-					  sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+					  sprintf(&(str[0]), "!%s:%u#\n",
+							  tempStr, checksumResult),
+					  100);
 	checksumResult = 0;
 }
 
@@ -101,9 +105,21 @@ void command_parser_fsm(){
 			else if (buffer[idx] == '#'){
 				cmd_flag = INIT_UART;
 				if (cmd_buffer[0] == 'R') action_flag = SEND;
-				else if (cmd_buffer[0] == 'O') action_flag = STOP_SEND;
+				else if (cmd_buffer[0] == 'O' && cmd_buffer[1] == 'K') action_flag = STOP_SEND;
 				else if (cmd_buffer[0] == 'V') sendMCUInfo();
 				else if (cmd_buffer[0] == 'S') sendSensorInfo();
+				else if (cmd_buffer[0] == 'O' && cmd_buffer[1] == 'N'){
+					if(cmd_buffer[2] == '1'){
+						setLedState(1, ON);
+					}
+					else setLedState(2,ON);
+				}
+				else if (cmd_buffer[0] == 'O' && cmd_buffer[1] == 'F' && cmd_buffer[2] == 'F'){
+						if(cmd_buffer[3] == '1'){
+							setLedState(1, OFF);
+						}
+						else setLedState(2,OFF);
+					}
 				index_buffer = 0;
 				cmd_index = 0;
 				idx = 0;
@@ -121,16 +137,24 @@ void uart_communiation_fsm(){
 		//resetStr();
 		if(getSensorStatus()==0){
 			checksumResult = checksumCalc(&(tempStr[0]),
-										  sprintf( &(tempStr[0]), "ERR:%.2f:%.2f", 0.0, 0.0));
+										  sprintf(&(tempStr[0]),
+												  "ERR:%.2f:%.2f", 0.0, 0.0));
 			HAL_UART_Transmit(&huart1,
-							  &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+							  &(str[0]),
+							  sprintf(&(str[0]),
+									  "!%s:%u#\n", tempStr, checksumResult), 100);
 			checksumResult = 0;
 			return;
 		}
 		checksumResult = checksumCalc(&(tempStr[0]),
-									  sprintf( &(tempStr[0]), "OK:%.2f:%.2f", getTemp(), getHumid()));
+									  sprintf( &(tempStr[0]),
+											  "OK:%.2f:%.2f",
+											  getTemp(),
+											  getHumid()));
 		HAL_UART_Transmit(&huart1,
-						  &(str[0]), sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult), 100);
+						  &(str[0]),
+						  sprintf( &(str[0]), "!%s:%u#\n", tempStr, checksumResult),
+						  100);
 		checksumResult = 0;
 	}
 	else if(action_flag==STOP_SEND){
